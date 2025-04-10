@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://detmmxl6w1f4r"]
+
+[ext_resource type="Script" uid="uid://cpq34wknfqqcl" path="res://scripts/stateMachines/enemies/EnemiesShoot.cs" id="1_p3aen"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1wag1"]
+radius = 600.0
+
+[node name="EnemiesShoot" type="Node2D"]
+script = ExtResource("1_p3aen")
+
+[node name="DetectionZone" type="Area2D" parent="."]
+scale = Vector2(7.92, 7.92)
+collision_layer = 3
+collision_mask = 259
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionZone"]
+shape = SubResource("CircleShape2D_1wag1")

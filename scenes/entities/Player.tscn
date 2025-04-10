@@ -1,0 +1,151 @@
+[gd_scene load_steps=20 format=3 uid="uid://c8vtwywf2q8i6"]
+
+[ext_resource type="Script" uid="uid://drrc6m5f5gk6x" path="res://scripts/entities/Player.cs" id="1_v6fml"]
+[ext_resource type="Texture2D" uid="uid://omjadm1lva1f" path="res://sprites/entities/player/ph_player_sprite_sheet.png" id="2_v6fml"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_82gks"]
+size = Vector2(28, 52)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3li8b"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mdl7e"]
+animation = &"left_turn"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qu4a1"]
+animation = &"right_turn"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_70d11"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cw2d6"]
+advance_mode = 2
+advance_condition = &"left_turn"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_khinc"]
+advance_mode = 2
+advance_condition = &"right_turn"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bruh7"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6eyey"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v6fml"]
+advance_mode = 2
+advance_condition = &"right_turn"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3li8b"]
+advance_mode = 2
+advance_condition = &"left_turn"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_d3wef"]
+states/Start/position = Vector2(144, 116)
+states/idle/node = SubResource("AnimationNodeAnimation_3li8b")
+states/idle/position = Vector2(274, 116)
+states/left_turn/node = SubResource("AnimationNodeAnimation_mdl7e")
+states/left_turn/position = Vector2(408, 32)
+states/right_turn/node = SubResource("AnimationNodeAnimation_qu4a1")
+states/right_turn/position = Vector2(408, 196)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_70d11"), "idle", "left_turn", SubResource("AnimationNodeStateMachineTransition_cw2d6"), "idle", "right_turn", SubResource("AnimationNodeStateMachineTransition_khinc"), "left_turn", "idle", SubResource("AnimationNodeStateMachineTransition_bruh7"), "right_turn", "idle", SubResource("AnimationNodeStateMachineTransition_6eyey"), "left_turn", "right_turn", SubResource("AnimationNodeStateMachineTransition_v6fml"), "right_turn", "left_turn", SubResource("AnimationNodeStateMachineTransition_3li8b")]
+
+[sub_resource type="Animation" id="Animation_lkdrv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_o4126"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_p7iby"]
+resource_name = "left_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_0rnld"]
+resource_name = "right_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [3, 4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_srp4u"]
+_data = {
+&"RESET": SubResource("Animation_lkdrv"),
+&"idle": SubResource("Animation_o4126"),
+&"left_turn": SubResource("Animation_p7iby"),
+&"right_turn": SubResource("Animation_0rnld")
+}
+
+[node name="Player" type="CharacterBody2D"]
+texture_filter = 1
+collision_mask = 2
+script = ExtResource("1_v6fml")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_82gks")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("2_v6fml")
+hframes = 5
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_d3wef")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/idle = false
+parameters/conditions/left_turn = false
+parameters/conditions/right_turn = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_srp4u")
+}
+
+[node name="AtkSpeed" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
