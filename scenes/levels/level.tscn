@@ -1,11 +1,70 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwvkeojsm23no"]
+[gd_scene load_steps=13 format=3 uid="uid://dwvkeojsm23no"]
 
 [ext_resource type="PackedScene" uid="uid://c8vtwywf2q8i6" path="res://scenes/entities/Player.tscn" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://88yf3hnr8k7h" path="res://scenes/entities/Enemy.tscn" id="2_b2cq8"]
+[ext_resource type="Shader" uid="uid://dxc3fbsqq52y0" path="res://ressources/backgroud/space.tres" id="3_xb4v1"]
+[ext_resource type="Texture2D" uid="uid://cdp7ewwkksieq" path="res://sprites/interfaces/Carre.png" id="4_xb4v1"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xb4v1"]
+noise_type = 2
+seed = 314
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_d4w6o"]
+seamless = true
+noise = SubResource("FastNoiseLite_xb4v1")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_urvlt"]
+noise_type = 3
+seed = 455
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mbbpy"]
+seamless = true
+noise = SubResource("FastNoiseLite_urvlt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mbbpy"]
+shader = ExtResource("3_xb4v1")
+shader_parameter/Background_1 = SubResource("NoiseTexture2D_d4w6o")
+shader_parameter/Color_1 = Color(0.218083, 0.000272035, 0.64206, 1)
+shader_parameter/Background_2 = SubResource("NoiseTexture2D_mbbpy")
+shader_parameter/Color_2 = Color(0.388215, 0.0019285, 0.759039, 1)
+shader_parameter/Mix = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xb4v1"]
+shader = ExtResource("3_xb4v1")
+shader_parameter/Color_1 = Color(0, 0, 0, 1)
+shader_parameter/Color_2 = Color(0, 0, 0, 1)
+shader_parameter/Mix = 0.5
+
+[sub_resource type="Sky" id="Sky_urvlt"]
+sky_material = SubResource("ShaderMaterial_xb4v1")
+
+[sub_resource type="Environment" id="Environment_xb4v1"]
+background_mode = 2
+sky = SubResource("Sky_urvlt")
+glow_enabled = true
+glow_levels/1 = 16.0
+glow_levels/7 = 35.75
 
 [node name="level" type="Node2D"]
+texture_filter = 1
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+visible = false
+scroll_limit_end = Vector2(2000, 2000)
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(1000, 1000)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+material = SubResource("ShaderMaterial_mbbpy")
+position = Vector2(484, 462)
+scale = Vector2(100, 100)
+texture = ExtResource("4_xb4v1")
 
 [node name="Player" parent="." instance=ExtResource("1_bovvr")]
 
 [node name="Enemy" parent="." instance=ExtResource("2_b2cq8")]
 position = Vector2(1421, 807)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xb4v1")
