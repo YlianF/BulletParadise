@@ -10,6 +10,7 @@ size = Vector2(5.33333, 5.33333)
 z_index = -1
 texture_filter = 1
 script = ExtResource("1_48g2p")
+AtkCooldown = 0.3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_k5ji7")

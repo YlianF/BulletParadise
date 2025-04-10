@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://jrbn3cvfmyca"]
+
+[ext_resource type="Texture2D" uid="uid://u2asgw1cjxb6" path="res://sprites/projectiles/ph_bullet.png" id="1_j4ndn"]
+[ext_resource type="Script" uid="uid://cbs0wpc638811" path="res://scripts/projectiles/Missile.cs" id="1_liya7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_liya7"]
+size = Vector2(16, 6)
+
+[node name="Node2D" type="Area2D"]
+z_index = -1
+texture_filter = 1
+script = ExtResource("1_liya7")
+damage = 35.0
+Speed = 125.0
+AtkCooldown = 0.6
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3.16, 1)
+texture = ExtResource("1_j4ndn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_liya7")
+
+[node name="AutoTrack" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Life" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

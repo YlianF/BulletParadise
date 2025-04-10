@@ -9,6 +9,8 @@ public abstract partial class Entity : CharacterBody2D
 	public int Speed { get; set; } = 300;
 	[Export]
 	public int Health { get; set; } = 50;
+    [Export]
+    public PackedScene Weapon;
 
     protected StateMachinesBrain _brain;
 
