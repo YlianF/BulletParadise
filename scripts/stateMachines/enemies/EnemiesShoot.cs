@@ -18,14 +18,14 @@ public partial class EnemiesShoot : StateMachine
     {
         base._Ready();
         
-        var parentEnemies = (Entity)_parentEntity;
+        var parentEnemies = (Enemy)_parentEntity;
 
         _detectionZone = GetNode<Area2D>("DetectionZone");
         _detectionZone.BodyEntered += EntityEntered;
         _detectionZone.BodyExited += EntityExited;
 
-        root = (Node2D) (Node2D) GetTree().Root.GetNode("level");
-        bullet = ResourceLoader.Load("res://scenes/projectiles/bullet.tscn") as PackedScene;
+        root = (Node2D) GetTree().Root.GetNode("level");
+        bullet = parentEnemies.Weapon;
         AtkSpeed = parentEnemies.GetNode<Timer>("AtkSpeed");
     }
 
@@ -47,15 +47,15 @@ public partial class EnemiesShoot : StateMachine
         if (AtkSpeed.IsStopped())
         {
             Shoot();
-            AtkSpeed.Start();
         }
     }
 
     public void Shoot() {
         var parentEnemy = (Enemy)_parentEntity;
-        var instance = bullet.Instantiate();
+        Projectiles instance = (Projectiles) bullet.Instantiate();
 		instance.Call("Constructor", parentEnemy.GlobalPosition, parentEnemy.Rotation, "ennemy");
 		root.AddChild(instance);
+        AtkSpeed.Start(instance.AtkCooldown);
     }
 
     public void EntityEntered(Node2D node)

@@ -8,6 +8,10 @@ public partial class Player : CharacterBody2D
     private int Speed = 300;
     [Export]
     private int Health = 100;
+    [Export]
+    private PackedScene Weapon1;
+    [Export]
+    private PackedScene Weapon2;
 
     private Node2D root;
     PackedScene bullet;
@@ -17,7 +21,8 @@ public partial class Player : CharacterBody2D
     public override void _Ready() {
         animationTree = GetNode<AnimationTree>("AnimationTree");
         root = (Node2D) GetParent();
-        bullet = ResourceLoader.Load("res://scenes/projectiles/bullet.tscn") as PackedScene;
+        
+        bullet = Weapon1;
         AtkSpeed = GetNode<Timer>("AtkSpeed");
     }
 
@@ -39,14 +44,14 @@ public partial class Player : CharacterBody2D
         if (Input.IsActionPressed("shoot") && AtkSpeed.IsStopped())
         {
             Shoot();
-            AtkSpeed.Start();
         }
     }
 
     public void Shoot() {
-        var instance = bullet.Instantiate();
+        Projectiles instance = (Projectiles) bullet.Instantiate();
 		instance.Call("Constructor", GlobalPosition, Rotation, "player");
 		root.AddChild(instance);
+        AtkSpeed.Start(instance.AtkCooldown);
     }
 
     public void TakeDamage(int damage) {
