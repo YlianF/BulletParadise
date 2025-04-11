@@ -7,7 +7,7 @@ public partial class Player : CharacterBody2D
     [Export]
     private int Speed = 300;
     [Export]
-    private int Health = 100;
+    private float Health = 100;
     [Export]
     private PackedScene Weapon1;
     [Export]
@@ -17,13 +17,28 @@ public partial class Player : CharacterBody2D
     PackedScene bullet;
     private AnimationTree animationTree;
     private Timer AtkSpeed;
+    private Timer RecoilTimer;
+
+    Projectiles CurrentWeapon;
 
     public override void _Ready() {
         animationTree = GetNode<AnimationTree>("AnimationTree");
         root = (Node2D) GetParent();
         
-        bullet = Weapon1;
         AtkSpeed = GetNode<Timer>("AtkSpeed");
+        RecoilTimer = GetNode<Timer>("Recoil");
+
+        EquipWeapon(Weapon1);
+        
+    }
+
+    public void EquipWeapon(PackedScene Weapon) {
+        bullet = Weapon;
+        this.CurrentWeapon = (Projectiles) bullet.Instantiate();
+
+        if (CurrentWeapon.ShootingType == "player") {
+            this.AddChild(CurrentWeapon);
+        }
     }
 
     public void GetInput()
@@ -36,25 +51,37 @@ public partial class Player : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
     {
-        GetInput();
-        MoveAndCollide(Velocity * (float)delta);
-
-        LookAt(GetGlobalMousePosition());
-
         if (Input.IsActionPressed("shoot") && AtkSpeed.IsStopped())
         {
-            Shoot();
+            if (CurrentWeapon.ShootingType == "root") {
+                Projectiles shot = (Projectiles) bullet.Instantiate();
+                shot.Call("Constructor", GlobalPosition, Rotation, "player");
+                root.AddChild(shot);
+            } else {
+                CurrentWeapon.Call("Shoot");
+            }
+            
+            AtkSpeed.Start(CurrentWeapon.AtkCooldown);
+            RecoilTimer.Start();
         }
+
+        if (Input.IsActionJustReleased("change_wpn") && Weapon2 is not null) {
+            GD.Print("change");
+            AtkSpeed.Stop();
+            SwitchWeapon();
+        }
+
+        if (!RecoilTimer.IsStopped()) {
+            Position -= Transform.X * CurrentWeapon.Recoil * ((float) RecoilTimer.TimeLeft / (float) RecoilTimer.WaitTime) / 50;
+        }
+
+        GetInput();
+        MoveAndCollide(Velocity * (float)delta);
+        LookAt(GetGlobalMousePosition());
+
     }
 
-    public void Shoot() {
-        Projectiles instance = (Projectiles) bullet.Instantiate();
-		instance.Call("Constructor", GlobalPosition, Rotation, "player");
-		root.AddChild(instance);
-        AtkSpeed.Start(instance.AtkCooldown);
-    }
-
-    public void TakeDamage(int damage) {
+    public void TakeDamage(float damage) {
         this.Health -= damage;
         if (Health <=0) {
             GameOver();
@@ -63,6 +90,15 @@ public partial class Player : CharacterBody2D
 
     public void GameOver() {
         GD.Print("Game Over !!");
+    }
+
+
+    public void SwitchWeapon() {
+        if (bullet == Weapon1) {
+            EquipWeapon(Weapon2);
+        } else {
+            EquipWeapon(Weapon1);
+        }
     }
 
 

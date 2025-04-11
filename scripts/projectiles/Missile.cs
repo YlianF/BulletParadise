@@ -17,7 +17,9 @@ public partial class Missile : Projectiles
         if (!AutoTrack.IsStopped())
         {
             LookAt(target.GlobalPosition);
+            Position += Transform.X * Speed * 0.25f * (float) delta;
+        } else {
+            Position += Transform.X * Speed * 2 * (float) delta;
         }
-        Position += Transform.X * Speed * (float) delta;
     }
 }

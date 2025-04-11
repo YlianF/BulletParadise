@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dwvkeojsm23no"]
+[gd_scene load_steps=10 format=3 uid="uid://dwvkeojsm23no"]
 
 [ext_resource type="PackedScene" uid="uid://c8vtwywf2q8i6" path="res://scenes/entities/Player.tscn" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://88yf3hnr8k7h" path="res://scenes/entities/Enemy.tscn" id="2_b2cq8"]
@@ -29,22 +29,6 @@ shader_parameter/Background_2 = SubResource("NoiseTexture2D_mbbpy")
 shader_parameter/Color_2 = Color(0.388215, 0.0019285, 0.759039, 1)
 shader_parameter/Mix = 0.5
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xb4v1"]
-shader = ExtResource("3_xb4v1")
-shader_parameter/Color_1 = Color(0, 0, 0, 1)
-shader_parameter/Color_2 = Color(0, 0, 0, 1)
-shader_parameter/Mix = 0.5
-
-[sub_resource type="Sky" id="Sky_urvlt"]
-sky_material = SubResource("ShaderMaterial_xb4v1")
-
-[sub_resource type="Environment" id="Environment_xb4v1"]
-background_mode = 2
-sky = SubResource("Sky_urvlt")
-glow_enabled = true
-glow_levels/1 = 16.0
-glow_levels/7 = 35.75
-
 [node name="level" type="Node2D"]
 texture_filter = 1
 
@@ -62,9 +46,7 @@ scale = Vector2(100, 100)
 texture = ExtResource("4_xb4v1")
 
 [node name="Player" parent="." instance=ExtResource("1_bovvr")]
+position = Vector2(159, 355)
 
 [node name="Enemy" parent="." instance=ExtResource("2_b2cq8")]
-position = Vector2(1421, 807)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_xb4v1")
+position = Vector2(734, 358)

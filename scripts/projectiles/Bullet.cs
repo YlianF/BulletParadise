@@ -4,4 +4,8 @@ public partial class Bullet : Projectiles
     {
         Position += Transform.X * Speed * (float) delta;
     }
+
+    public void Shoot() {
+        
+    }
 }

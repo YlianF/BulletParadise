@@ -55,7 +55,7 @@ public partial class EnemiesShoot : StateMachine
         Projectiles instance = (Projectiles) bullet.Instantiate();
 		instance.Call("Constructor", parentEnemy.GlobalPosition, parentEnemy.Rotation, "ennemy");
 		root.AddChild(instance);
-        AtkSpeed.Start(instance.AtkCooldown);
+        AtkSpeed.Start(instance.AtkCooldown * 2);
     }
 
     public void EntityEntered(Node2D node)

@@ -8,7 +8,7 @@ public abstract partial class Entity : CharacterBody2D
     [Export]
 	public int Speed { get; set; } = 300;
 	[Export]
-	public int Health { get; set; } = 50;
+	public float Health { get; set; } = 50;
     [Export]
     public PackedScene Weapon;
 
@@ -25,7 +25,8 @@ public abstract partial class Entity : CharacterBody2D
         MoveAndSlide();
     }
 
-    public void TakeDamage(int damage) {
+    public void TakeDamage(float damage) {
+        GD.Print(Health);
         this.Health -= damage;
         if (Health <=0) {
             Die();

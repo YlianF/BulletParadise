@@ -11,6 +11,10 @@ public partial class Projectiles : Area2D
     protected float Speed = 300f;
     [Export]
     public float AtkCooldown { get; set; } = 1.0f;
+    [Export]
+    public float Recoil = 0f;
+    [Export]
+    public string ShootingType = "root";
 
     protected Vector2 direction;
     protected Timer Life;
@@ -18,7 +22,6 @@ public partial class Projectiles : Area2D
     protected string Shooter;
 
     public override void _Ready() {
-        Scale *= 3;
         Life = GetNode<Timer>("Life");
         Life.Start(LifeTime);
     }
@@ -42,7 +45,7 @@ public partial class Projectiles : Area2D
         if (body.HasMethod("TakeDamage")) {
             if ((body is Player && Shooter == "ennemy") || (body is Enemy && Shooter == "player")) {
                 body.Call("TakeDamage", damage);
-                QueueFree();
+                //Queuefree
             }
         }
         

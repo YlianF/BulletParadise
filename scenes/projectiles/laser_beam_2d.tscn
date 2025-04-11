@@ -1,0 +1,133 @@
+[gd_scene load_steps=14 format=3 uid="uid://cb1jy3pa1b4tk"]
+
+[ext_resource type="Script" uid="uid://bmp78stofmg4o" path="res://scripts/projectiles/Laser.cs" id="1_upe81"]
+[ext_resource type="Script" uid="uid://bg3hcjireato2" path="res://scripts/projectiles/laser_beam_2d.gd" id="2_76beh"]
+[ext_resource type="Texture2D" uid="uid://c5rfak7h86e26" path="res://ressources/particles/glowing_square.png" id="3_37ue7"]
+
+[sub_resource type="Gradient" id="1"]
+offsets = PackedFloat32Array(0.582915, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="2"]
+gradient = SubResource("1")
+
+[sub_resource type="Curve" id="3"]
+_data = [Vector2(0.518072, 1), 0.0, -3.53434, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="4"]
+width = 2048
+curve = SubResource("3")
+
+[sub_resource type="ParticleProcessMaterial" id="5"]
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("4")
+color_ramp = SubResource("2")
+
+[sub_resource type="Curve" id="6"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.503614, 0.957505), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="7"]
+curve = SubResource("6")
+
+[sub_resource type="ParticleProcessMaterial" id="8"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(60, 20, 1)
+direction = Vector3(-1, 0, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = 100.0
+tangential_accel_max = 100.0
+scale_min = 0.3
+scale_max = 0.3
+scale_curve = SubResource("7")
+
+[sub_resource type="ParticleProcessMaterial" id="9"]
+particle_flag_disable_z = true
+spread = 50.0
+initial_velocity_min = 300.0
+initial_velocity_max = 300.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("4")
+color_ramp = SubResource("2")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ihsuk"]
+size = Vector2(1506.5, 20)
+
+[node name="Laser" type="Area2D"]
+script = ExtResource("1_upe81")
+damage = 50.0
+AtkCooldown = 1.5
+Recoil = 500.0
+ShootingType = "player"
+
+[node name="LaserBeam2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 0)
+script = ExtResource("2_76beh")
+max_length = 2000.0
+
+[node name="FillLine2D" type="Line2D" parent="LaserBeam2D"]
+modulate = Color(1.5, 1.5, 1.5, 1)
+points = PackedVector2Array(0, 0, 20, 0)
+default_color = Color(0.301961, 0.65098, 1, 1)
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+sharp_limit = 8.0
+antialiased = true
+
+[node name="CastingParticles2D" type="GPUParticles2D" parent="LaserBeam2D"]
+modulate = Color(1.5, 1.5, 1.5, 1)
+show_behind_parent = true
+emitting = false
+texture = ExtResource("3_37ue7")
+lifetime = 0.3
+visibility_rect = Rect2(0, -18.722, 29.6756, 38.4841)
+process_material = SubResource("5")
+
+[node name="BeamParticles2D" type="GPUParticles2D" parent="LaserBeam2D"]
+modulate = Color(1.5, 1.5, 1.5, 1)
+emitting = false
+amount = 50
+texture = ExtResource("3_37ue7")
+preprocess = 1.0
+randomness = 1.0
+visibility_rect = Rect2(-2500, -2500, 5000, 5000)
+process_material = SubResource("8")
+
+[node name="CollisionParticles2D" type="GPUParticles2D" parent="LaserBeam2D"]
+modulate = Color(1.5, 1.5, 1.5, 1)
+show_behind_parent = true
+emitting = false
+amount = 16
+texture = ExtResource("3_37ue7")
+lifetime = 0.3
+visibility_rect = Rect2(-2500, -2500, 5000, 5000)
+process_material = SubResource("9")
+
+[node name="CastTime" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(749.75, 0)
+shape = SubResource("RectangleShape2D_ihsuk")
+disabled = true
+
+[node name="Startup" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="CastTime" to="." method="_on_cast_t_ime_timeout"]
+[connection signal="timeout" from="Startup" to="." method="_on_startup_timeout"]
