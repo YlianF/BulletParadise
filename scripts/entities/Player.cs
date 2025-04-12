@@ -106,42 +106,29 @@ public partial class Player : CharacterBody2D
 
 
     public void HandleAnimations(Vector2 input) {
-        int CurrentLeft = 0;
-        int CurrentRight = 0;
         float AxisUsed = 0;
 
-        if (GlobalRotation <= -0.75f && GlobalRotation >= -2.25f) {
-            AxisUsed = input.X;
-            CurrentLeft = -1;
-            CurrentRight = 1;
-        }
-        if (GlobalRotation >= 0.75f && GlobalRotation <= 2.25f) {
-            AxisUsed = input.X;
-            CurrentLeft = 1;
-            CurrentRight = -1;
-        }
-        if (GlobalRotation >= 2.5f || GlobalRotation <= -2.25f) {
+        if (GlobalRotation >= -Mathf.Pi/4 && GlobalRotation <= Mathf.Pi/4) { // look to right
             AxisUsed = input.Y;
-            CurrentLeft = 1;
-            CurrentRight = -1;
-        }
-        if (GlobalRotation <= 0.75f && GlobalRotation >= -0.75f) {
-            AxisUsed = input.Y;
-            CurrentLeft = -1;
-            CurrentRight = 1;
+        } else if (GlobalRotation <= -3*Mathf.Pi/4 || GlobalRotation >= 3*Mathf.Pi/4) { // look to left
+            AxisUsed = -input.Y;
+        } else if (GlobalRotation <= -Mathf.Pi/4 && GlobalRotation >= -3*Mathf.Pi/4) { // look up
+            AxisUsed = input.X;
+        } else if (GlobalRotation >= Mathf.Pi/4 && GlobalRotation <= 3*Mathf.Pi/4) { // look down
+            AxisUsed = -input.X;
         }
 
         if (AxisUsed == 0f) {
             animationTree.Set("parameters/conditions/idle", true);
             animationTree.Set("parameters/conditions/left_turn", false);
             animationTree.Set("parameters/conditions/right_turn", false);
-        } else if (AxisUsed == CurrentLeft) {
-            animationTree.Set("parameters/conditions/left_turn", true);
-            animationTree.Set("parameters/conditions/right_turn", false);
-            animationTree.Set("parameters/conditions/idle", false);
-        } else if (AxisUsed == CurrentRight) {
+        } else if (AxisUsed > 0) {
             animationTree.Set("parameters/conditions/right_turn", true);
             animationTree.Set("parameters/conditions/left_turn", false);
+            animationTree.Set("parameters/conditions/idle", false);
+        } else if (AxisUsed < 0) {
+            animationTree.Set("parameters/conditions/left_turn", true);
+            animationTree.Set("parameters/conditions/right_turn", false);
             animationTree.Set("parameters/conditions/idle", false);
         }
     }

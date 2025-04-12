@@ -26,9 +26,12 @@ public partial class Projectiles : Area2D
         Life.Start(LifeTime);
     }
 
-    public override void _PhysicsProcess(double delta)
-    {
-        
+    public void Constructor(Vector2 pos, float rot, string shooter, float dmg, float spd) {
+        this.GlobalPosition = pos;
+        GlobalRotation = rot;
+        Shooter = shooter;
+        damage = dmg;
+        Speed = spd;
     }
 
     public void Constructor(Vector2 pos, float rot, string shooter) {

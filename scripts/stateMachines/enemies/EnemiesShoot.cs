@@ -11,6 +11,7 @@ public partial class EnemiesShoot : StateMachine
 
     private Node2D root;
     PackedScene bullet;
+    Projectiles CurrentWeapon;
     private Timer AtkSpeed;
 
 
@@ -26,6 +27,10 @@ public partial class EnemiesShoot : StateMachine
 
         root = (Node2D) GetTree().Root.GetNode("level");
         bullet = parentEnemies.Weapon;
+        CurrentWeapon = (Projectiles) bullet.Instantiate();
+        if (CurrentWeapon.ShootingType == "player") {
+            this.AddChild(CurrentWeapon);
+        }
         AtkSpeed = parentEnemies.GetNode<Timer>("AtkSpeed");
     }
 
@@ -52,10 +57,16 @@ public partial class EnemiesShoot : StateMachine
 
     public void Shoot() {
         var parentEnemy = (Enemy)_parentEntity;
-        Projectiles instance = (Projectiles) bullet.Instantiate();
-		instance.Call("Constructor", parentEnemy.GlobalPosition, parentEnemy.Rotation, "ennemy");
-		root.AddChild(instance);
-        AtkSpeed.Start(instance.AtkCooldown * 2);
+
+        if (CurrentWeapon.ShootingType == "root") {
+            Projectiles shot = (Projectiles) bullet.Instantiate();
+            shot.Call("Constructor", parentEnemy.GlobalPosition, parentEnemy.Rotation, "ennemy");
+            root.AddChild(shot);
+        } else {
+            CurrentWeapon.Call("Shoot");
+        }
+
+        AtkSpeed.Start(CurrentWeapon.AtkCooldown * 2);
     }
 
     public void EntityEntered(Node2D node)

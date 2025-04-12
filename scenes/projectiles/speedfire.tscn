@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnnc30g11fmpl"]
+
+[ext_resource type="Script" uid="uid://cmeiitlavg6d0" path="res://scripts/projectiles/Speedfire.cs" id="1_bnm3x"]
+[ext_resource type="PackedScene" uid="uid://b6fsfwxywvro1" path="res://scenes/projectiles/bullet.tscn" id="2_82lu7"]
+
+[node name="Speedfire" type="Area2D"]
+script = ExtResource("1_bnm3x")
+TimeBetweenShots = 0.1
+SpawnBullet = ExtResource("2_82lu7")
+BulletNumber = 3.0
+ShootingType = "player"
+
+[node name="Life" type="Timer" parent="."]
