@@ -26,7 +26,6 @@ public abstract partial class Entity : CharacterBody2D
     }
 
     public void TakeDamage(float damage) {
-        GD.Print(Health);
         this.Health -= damage;
         if (Health <=0) {
             Die();

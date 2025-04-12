@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://dwvkeojsm23no"]
+[gd_scene load_steps=11 format=3 uid="uid://dwvkeojsm23no"]
 
 [ext_resource type="PackedScene" uid="uid://c8vtwywf2q8i6" path="res://scenes/entities/Player.tscn" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://88yf3hnr8k7h" path="res://scenes/entities/Enemy.tscn" id="2_b2cq8"]
 [ext_resource type="Shader" uid="uid://dxc3fbsqq52y0" path="res://ressources/backgroud/space.tres" id="3_xb4v1"]
 [ext_resource type="Texture2D" uid="uid://cdp7ewwkksieq" path="res://sprites/interfaces/Carre.png" id="4_xb4v1"]
+[ext_resource type="PackedScene" uid="uid://b6fsfwxywvro1" path="res://scenes/projectiles/bullet.tscn" id="5_urvlt"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_xb4v1"]
 noise_type = 2
@@ -50,3 +51,4 @@ position = Vector2(159, 355)
 
 [node name="Enemy" parent="." instance=ExtResource("2_b2cq8")]
 position = Vector2(734, 358)
+Weapon = ExtResource("5_urvlt")

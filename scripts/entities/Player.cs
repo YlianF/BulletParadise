@@ -23,7 +23,7 @@ public partial class Player : CharacterBody2D
 
     public override void _Ready() {
         animationTree = GetNode<AnimationTree>("AnimationTree");
-        root = (Node2D) GetParent();
+        root = (Node2D) GetTree().Root.GetNode("level");
         
         AtkSpeed = GetNode<Timer>("AtkSpeed");
         RecoilTimer = GetNode<Timer>("Recoil");
@@ -66,7 +66,6 @@ public partial class Player : CharacterBody2D
         }
 
         if (Input.IsActionJustReleased("change_wpn") && Weapon2 is not null) {
-            GD.Print("change");
             AtkSpeed.Stop();
             SwitchWeapon();
         }
