@@ -8,18 +8,26 @@ public partial class Player : CharacterBody2D
     private int Speed = 300;
     [Export]
     private float Health = 100;
+
+    private ProjectilesSpawner Weapon1;
     [Export]
-    private PackedScene Weapon1;
+    private PackedScene Bullet1;
     [Export]
-    private PackedScene Weapon2;
+    private PackedScene WeaponSpwn1;
+    private ProjectilesSpawner Weapon2;
+    [Export]
+    private PackedScene Bullet2;
+    [Export]
+    private PackedScene WeaponSpwn2;
 
     private Node2D root;
     PackedScene bullet;
     private AnimationTree animationTree;
     private Timer AtkSpeed;
     private Timer RecoilTimer;
+    private Camera2D Camera;
 
-    Projectiles CurrentWeapon;
+    ProjectilesSpawner CurrentWeapon;
 
     public override void _Ready() {
         animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -27,18 +35,22 @@ public partial class Player : CharacterBody2D
         
         AtkSpeed = GetNode<Timer>("AtkSpeed");
         RecoilTimer = GetNode<Timer>("Recoil");
+        Camera = GetNode<Camera2D>("Camera2D");
 
+
+        Weapon1 = (ProjectilesSpawner) WeaponSpwn1.Instantiate();
+        Weapon1.Call("Constructor", GlobalPosition, GlobalRotation, "player", Bullet1);
+        this.AddChild(Weapon1);
+        // Weapon2 = (ProjectilesSpawner) WeaponSpwn2.Instantiate();
+        // Weapon2.Call("Constructor", GlobalPosition, GlobalRotation, "player", 25, 20, Bullet2);
+        Weapon2 = (ProjectilesSpawner) WeaponSpwn2.Instantiate();
+        this.AddChild(Weapon2);
         EquipWeapon(Weapon1);
-        
     }
 
-    public void EquipWeapon(PackedScene Weapon) {
-        bullet = Weapon;
-        this.CurrentWeapon = (Projectiles) bullet.Instantiate();
-
-        if (CurrentWeapon.ShootingType == "player") {
-            this.AddChild(CurrentWeapon);
-        }
+    public void EquipWeapon(ProjectilesSpawner Weapon)
+    {
+        CurrentWeapon = Weapon;
     }
 
     public void GetInput()
@@ -53,14 +65,8 @@ public partial class Player : CharacterBody2D
     {
         if (Input.IsActionPressed("shoot") && AtkSpeed.IsStopped())
         {
-            if (CurrentWeapon.ShootingType == "root") {
-                Projectiles shot = (Projectiles) bullet.Instantiate();
-                shot.Call("Constructor", GlobalPosition, Rotation, "player");
-                root.AddChild(shot);
-            } else {
-                CurrentWeapon.Call("Shoot");
-            }
-            
+            CurrentWeapon.Call("Shoot");
+
             AtkSpeed.Start(CurrentWeapon.AtkCooldown);
             RecoilTimer.Start();
         }
@@ -81,6 +87,7 @@ public partial class Player : CharacterBody2D
     }
 
     public void TakeDamage(float damage) {
+        Camera.Call("apply_shake");
         this.Health -= damage;
         if (Health <=0) {
             GameOver();
@@ -93,7 +100,7 @@ public partial class Player : CharacterBody2D
 
 
     public void SwitchWeapon() {
-        if (bullet == Weapon1) {
+        if (CurrentWeapon == Weapon1) {
             EquipWeapon(Weapon2);
         } else {
             EquipWeapon(Weapon1);

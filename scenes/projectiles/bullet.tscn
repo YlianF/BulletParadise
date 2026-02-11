@@ -9,7 +9,6 @@ size = Vector2(5.33333, 5.33333)
 [node name="Node2D" type="Area2D"]
 z_index = -1
 texture_filter = 1
-scale = Vector2(3, 3)
 script = ExtResource("1_48g2p")
 Speed = 200.0
 AtkCooldown = 0.5
@@ -22,6 +21,7 @@ shape = SubResource("RectangleShape2D_xw300")
 
 [node name="Life" type="Timer" parent="."]
 wait_time = 10.0
+one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="Life" to="." method="_on_deathtimer_timeout"]

@@ -1,11 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://c8vtwywf2q8i6"]
+[gd_scene load_steps=22 format=3 uid="uid://c8vtwywf2q8i6"]
 
 [ext_resource type="Script" uid="uid://drrc6m5f5gk6x" path="res://scripts/entities/Player.cs" id="1_v6fml"]
 [ext_resource type="Texture2D" uid="uid://omjadm1lva1f" path="res://sprites/entities/player/ph_player_sprite_sheet.png" id="2_v6fml"]
-[ext_resource type="PackedScene" uid="uid://b6wlmyhnh8o6i" path="res://scenes/projectiles/shotgun.tscn" id="2_yjynp"]
+[ext_resource type="PackedScene" uid="uid://ci4ed0alrm2ss" path="res://ressources/particles/Booster.tscn" id="5_j1g85"]
+[ext_resource type="Script" uid="uid://c7nxqeiofdueh" path="res://scripts/entities/Camera.cs" id="6_7jddb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_82gks"]
-size = Vector2(28, 52)
+size = Vector2(7, 12)
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3li8b"]
 animation = &"idle"
@@ -126,14 +127,12 @@ _data = {
 texture_filter = 1
 collision_mask = 2
 script = ExtResource("1_v6fml")
-Weapon1 = ExtResource("2_yjynp")
-Weapon2 = ExtResource("2_yjynp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_82gks")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
 texture = ExtResource("2_v6fml")
 hframes = 5
 
@@ -156,3 +155,15 @@ one_shot = true
 [node name="Recoil" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="Node2D" parent="." instance=ExtResource("5_j1g85")]
+z_index = -1
+position = Vector2(-5, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+drag_vertical_enabled = true
+drag_bottom_margin = 0.0
+script = ExtResource("6_7jddb")

@@ -16,15 +16,16 @@ public partial class Shotgun : ProjectilesSpawner
 		AngleBetweenBullets = range/(BulletNumber -1);
 	}
 
-	public void Constructor(Vector2 pos, float rot, string shooter, float dmg, float spd, PackedScene spwnbullet, float rng) {
-		base.Constructor(pos, rot, shooter, dmg, spd, spwnbullet);
+	public void Constructor(Vector2 pos, float rot, string shooter, PackedScene spwnbullet, float rng) {
+		base.Constructor(pos, rot, shooter, spwnbullet);
 		range = rng;
     }
 
 	public void Shoot() {
-		for (int i=0; i<BulletNumber; i++) {
+		for (int i = 0; i < BulletNumber; i++)
+		{
 			Projectiles shot = (Projectiles) SpawnBullet.Instantiate();
-			shot.Call("Constructor", GlobalPosition, GlobalRotation - (StartRange + AngleBetweenBullets * i), "player");
+			shot.Call("Constructor", GlobalPosition, GlobalRotation - (StartRange + AngleBetweenBullets * i), Shooter);
 			root.AddChild(shot);
 		}
 	}

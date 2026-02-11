@@ -1,21 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://88yf3hnr8k7h"]
+[gd_scene load_steps=7 format=3 uid="uid://88yf3hnr8k7h"]
 
 [ext_resource type="PackedScene" uid="uid://du8rgbdpcdd8y" path="res://scenes/Compenant/StateMachinesBrain.tscn" id="1_1f8up"]
 [ext_resource type="Script" uid="uid://ggoh5i0518sg" path="res://scripts/entities/Enemy.cs" id="1_ft8do"]
-[ext_resource type="PackedScene" uid="uid://jrbn3cvfmyca" path="res://scenes/projectiles/missile.tscn" id="2_mj3ic"]
 [ext_resource type="PackedScene" uid="uid://detmmxl6w1f4r" path="res://scenes/Compenant/StateMachines/EnemiesShoot.tscn" id="3_3hv41"]
 [ext_resource type="PackedScene" uid="uid://cpd6oe5tt4agv" path="res://scenes/Compenant/StateMachines/EnemiesMove.tscn" id="4_ctt2s"]
 [ext_resource type="Texture2D" uid="uid://vg7sya7rwa2y" path="res://sprites/entities/ennemies/ph_ennemy.png" id="5_5wwv6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uudsg"]
-radius = 40.0
+radius = 29.0689
 
 [node name="Enemy" type="CharacterBody2D"]
 texture_filter = 1
 collision_layer = 257
 collision_mask = 2
 script = ExtResource("1_ft8do")
-Weapon = ExtResource("2_mj3ic")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_uudsg")
@@ -34,7 +32,10 @@ wait_time = 0.5
 one_shot = true
 
 [node name="Skin" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
 texture = ExtResource("5_5wwv6")
+
+[node name="Recoil" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
 
 [editable path="Brain"]

@@ -1,14 +1,15 @@
 using Godot;
 using System;
-
-public partial class Laser : Projectiles
+using Timtode.Entity;
+public partial class Laser : ProjectilesSpawner
 {
     RayCast2D laser;
     Timer CastTime;
     Timer Startup;
     CollisionShape2D Collision;
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         laser = GetNode<RayCast2D>("LaserBeam2D");
         CastTime = GetNode<Timer>("CastTime");
         Startup = GetNode<Timer>("Startup");
@@ -16,22 +17,34 @@ public partial class Laser : Projectiles
         Shooter = "player";
     }
 
-    public void Shoot() {
+    public void Shoot()
+    {
         laser.Call("Shoot");
         CastTime.Start();
         Startup.Start();
     }
 
-    public void _on_startup_timeout() {
+    public void _on_startup_timeout()
+    {
         Collision.Disabled = false;
     }
 
-    public void _on_cast_t_ime_timeout() {
+    public void _on_cast_t_ime_timeout()
+    {
         StopShoot();
     }
 
-    public void StopShoot() {
+    public void StopShoot()
+    {
         laser.Call("StopShoot");
         Collision.Disabled = true;
+    }
+    
+    public void _on_body_entered (Node2D body) {
+        if (body.HasMethod("TakeDamage")) {
+            if ((body is Player && Shooter == "ennemy") || (body is Enemy && Shooter == "player")) {
+                body.Call("TakeDamage", Damage);
+            }
+        }
     }
 }

@@ -1,56 +1,100 @@
-[gd_scene load_steps=12 format=3 uid="uid://dwvkeojsm23no"]
+[gd_scene load_steps=23 format=3 uid="uid://dwvkeojsm23no"]
 
 [ext_resource type="PackedScene" uid="uid://c8vtwywf2q8i6" path="res://scenes/entities/Player.tscn" id="1_bovvr"]
 [ext_resource type="PackedScene" uid="uid://88yf3hnr8k7h" path="res://scenes/entities/Enemy.tscn" id="2_b2cq8"]
 [ext_resource type="Shader" uid="uid://dxc3fbsqq52y0" path="res://ressources/backgroud/space.tres" id="3_xb4v1"]
-[ext_resource type="PackedScene" uid="uid://cnnc30g11fmpl" path="res://scenes/projectiles/speedfire.tscn" id="4_d4w6o"]
 [ext_resource type="Texture2D" uid="uid://cdp7ewwkksieq" path="res://sprites/interfaces/Carre.png" id="4_xb4v1"]
-[ext_resource type="PackedScene" uid="uid://b6wlmyhnh8o6i" path="res://scenes/projectiles/shotgun.tscn" id="6_d4w6o"]
+[ext_resource type="PackedScene" uid="uid://b6wlmyhnh8o6i" path="res://scenes/projectiles/shotgun.tscn" id="5_d4w6o"]
+[ext_resource type="PackedScene" uid="uid://deb3h4d0b4j15" path="res://scenes/projectiles/singlefire.tscn" id="5_rmjfq"]
+[ext_resource type="Script" uid="uid://matv77t2g4ah" path="res://scripts/entities/EnemySpawner.cs" id="5_urvlt"]
+[ext_resource type="PackedScene" uid="uid://cb1jy3pa1b4tk" path="res://scenes/projectiles/laser_beam_2d.tscn" id="6_xfk5q"]
+[ext_resource type="PackedScene" uid="uid://b6fsfwxywvro1" path="res://scenes/projectiles/bullet.tscn" id="7_icy5c"]
+[ext_resource type="PackedScene" uid="uid://jrbn3cvfmyca" path="res://scenes/projectiles/missile.tscn" id="8_rmjfq"]
+[ext_resource type="PackedScene" uid="uid://cnnc30g11fmpl" path="res://scenes/projectiles/speedfire.tscn" id="9_7pb6i"]
+[ext_resource type="Shader" uid="uid://dmdt2j04nkqyv" path="res://ressources/backgroud/CRT.gdshader" id="11_7pb6i"]
+
+[sub_resource type="Environment" id="Environment_xfk5q"]
+background_mode = 3
+glow_enabled = true
+glow_bloom = 0.1
+
+[sub_resource type="Gradient" id="Gradient_urvlt"]
+offsets = PackedFloat32Array(0.264706, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_xb4v1"]
 noise_type = 2
 seed = 314
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_d4w6o"]
-seamless = true
 noise = SubResource("FastNoiseLite_xb4v1")
+color_ramp = SubResource("Gradient_urvlt")
+seamless = true
+
+[sub_resource type="Gradient" id="Gradient_d4w6o"]
+offsets = PackedFloat32Array(0.301471, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_urvlt"]
 noise_type = 3
 seed = 455
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mbbpy"]
-seamless = true
 noise = SubResource("FastNoiseLite_urvlt")
+color_ramp = SubResource("Gradient_d4w6o")
+seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mbbpy"]
 shader = ExtResource("3_xb4v1")
 shader_parameter/Background_1 = SubResource("NoiseTexture2D_d4w6o")
-shader_parameter/Color_1 = Color(0.218083, 0.000272035, 0.64206, 1)
+shader_parameter/Color_1 = Color(0.294118, 0, 0.694118, 1)
 shader_parameter/Background_2 = SubResource("NoiseTexture2D_mbbpy")
-shader_parameter/Color_2 = Color(0.388215, 0.0019285, 0.759039, 1)
+shader_parameter/Color_2 = Color(3.85046e-07, 0.405433, 0.36876, 1)
 shader_parameter/Mix = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xfk5q"]
+shader = ExtResource("11_7pb6i")
+shader_parameter/curvature = 6.0
+shader_parameter/vignette_multiplier = 2.0
+shader_parameter/ca_strength = 2.5
+shader_parameter/blur_strength = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_qogh7"]
+size = Vector2(1280, 720)
+center_offset = Vector3(640, 360, 0)
 
 [node name="level" type="Node2D"]
 texture_filter = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xfk5q")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 visible = false
 scroll_limit_end = Vector2(2000, 2000)
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2(1000, 1000)
+motion_mirroring = Vector2(1500, 1500)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 material = SubResource("ShaderMaterial_mbbpy")
-position = Vector2(484, 462)
-scale = Vector2(100, 100)
+scale = Vector2(150, 150)
 texture = ExtResource("4_xb4v1")
 
 [node name="Player" parent="." instance=ExtResource("1_bovvr")]
-position = Vector2(159, 355)
-Weapon1 = ExtResource("4_d4w6o")
+Bullet1 = ExtResource("7_icy5c")
+WeaponSpwn1 = ExtResource("5_rmjfq")
+WeaponSpwn2 = ExtResource("6_xfk5q")
 
-[node name="Enemy" parent="." instance=ExtResource("2_b2cq8")]
-position = Vector2(734, 358)
-Weapon = ExtResource("6_d4w6o")
+[node name="EnemySpwer" type="Node2D" parent="."]
+script = ExtResource("5_urvlt")
+enemy = ExtResource("2_b2cq8")
+PossibleWeapons = Array[PackedScene]([ExtResource("7_icy5c"), ExtResource("8_rmjfq")])
+PossibleModifiers = Array[PackedScene]([ExtResource("5_d4w6o"), ExtResource("9_7pb6i"), ExtResource("5_rmjfq")])
+
+[node name="SpawnTimer" type="Timer" parent="EnemySpwer"]
+one_shot = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_xfk5q")
+mesh = SubResource("QuadMesh_qogh7")

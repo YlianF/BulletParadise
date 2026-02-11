@@ -11,7 +11,7 @@ public partial class Speedfire : ProjectilesSpawner
 	}
 
 	public void Constructor(Vector2 pos, float rot, string shooter, float dmg, float spd, PackedScene spwnbullet, float timeshots) {
-		base.Constructor(pos, rot, shooter, dmg, spd, spwnbullet);
+		base.Constructor(pos, rot, shooter, spwnbullet);
 		TimeBetweenShots = timeshots;
     }
 
@@ -19,7 +19,7 @@ public partial class Speedfire : ProjectilesSpawner
         var CurrentRot = GlobalRotation;
 		for (int i=0; i<BulletNumber; i++) {
 			Projectiles shot = (Projectiles) SpawnBullet.Instantiate();
-			shot.Call("Constructor", GlobalPosition, CurrentRot, "player");
+			shot.Call("Constructor", GlobalPosition, CurrentRot, Shooter);
 			root.AddChild(shot);
 
             await ToSignal(GetTree().CreateTimer(TimeBetweenShots), "timeout");

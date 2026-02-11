@@ -5,8 +5,11 @@
 
 [node name="Shotgun" type="Area2D"]
 script = ExtResource("1_4aiqe")
+range = 0.5
 SpawnBullet = ExtResource("2_rnkll")
 BulletNumber = 3.0
+Recoil = 500.0
 ShootingType = "player"
 
 [node name="Life" type="Timer" parent="."]
+one_shot = true

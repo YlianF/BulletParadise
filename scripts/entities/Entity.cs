@@ -10,19 +10,27 @@ public abstract partial class Entity : CharacterBody2D
 	[Export]
 	public float Health { get; set; } = 50;
     [Export]
-    public PackedScene Weapon;
+    public PackedScene WeaponToSet;
 
+    public ProjectilesSpawner Weapon;
+
+    public Timer RecoilTimer;
     protected StateMachinesBrain _brain;
 
     public override void _Ready()
-	{
+    {
+        RecoilTimer = GetNode<Timer>("Recoil");
         _brain = GetNode<StateMachinesBrain>("Brain");
 	}
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         _brain.BrainProcess();
         MoveAndSlide();
+
+        if (!RecoilTimer.IsStopped()) {
+            Position -= Transform.X * Weapon.Recoil * ((float) RecoilTimer.TimeLeft / (float) RecoilTimer.WaitTime) / 50;
+        }
     }
 
     public void TakeDamage(float damage) {

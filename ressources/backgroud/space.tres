@@ -90,11 +90,10 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-486.488, -115.28)
 mode = 1
 flags/light_only = false
-preview_params/Color_1 = "Color(0.218083, 0.000272035, 0.64206, 1)"
-preview_params/Color_2 = "Color(0.388215, 0.0019285, 0.759039, 1)"
+preview_params/Color_1 = "Color(0.47451, 0.211765, 0.964706, 1)"
+preview_params/Color_2 = "Color(0.309804, 0.117647, 0.862745, 1)"
 preview_params/Mix = "0.5"
 nodes/fragment/0/position = Vector2(720, 160)
 nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_5pn43")

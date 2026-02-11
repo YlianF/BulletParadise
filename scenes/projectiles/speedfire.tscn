@@ -5,9 +5,10 @@
 
 [node name="Speedfire" type="Area2D"]
 script = ExtResource("1_bnm3x")
-TimeBetweenShots = 0.1
+TimeBetweenShots = 0.5
 SpawnBullet = ExtResource("2_82lu7")
 BulletNumber = 3.0
 ShootingType = "player"
 
 [node name="Life" type="Timer" parent="."]
+one_shot = true

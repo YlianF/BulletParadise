@@ -5,9 +5,10 @@ public partial class Missile : Projectiles
     Player target;
     Timer AutoTrack;
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         base._Ready();
-        target = (Player) GetTree().Root.GetNode("level").GetNode("Player");
+        target = (Player)GetTree().Root.GetNode("level").GetNode("Player");
         AutoTrack = GetNode<Timer>("AutoTrack");
         AutoTrack.Start(1);
     }
@@ -16,10 +17,17 @@ public partial class Missile : Projectiles
     {
         if (!AutoTrack.IsStopped())
         {
-            LookAt(target.GlobalPosition);
-            Position += Transform.X * Speed * 0.25f * (float) delta;
-        } else {
-            Position += Transform.X * Speed * 2 * (float) delta;
+            Position += Transform.X * Speed * (float)delta;
         }
+        else
+        {
+            
+            Position += Transform.X * Speed * 2 * (float)delta;
+        }
+    }
+
+    public void _on_auto_track_timeout()
+    {
+        LookAt(target.GlobalPosition);
     }
 }
